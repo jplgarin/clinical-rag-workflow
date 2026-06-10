@@ -21,7 +21,7 @@ in a folder. You never touch `core/`.
 Clinical report generation tools tend to be built around a single domain and
 resist extension. This project started from a different assumption: the
 retrieval, generation, and verification steps are the same regardless of whether
-the input is an EEG readout, a lab panel, or an imaging result. The
+the input is a lab panel, a cardiology summary, or an imaging result. The
 domain-specific logic is small enough to live in one class. So that is where it
 lives.
 
