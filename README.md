@@ -8,18 +8,18 @@ A retrieval-augmented pipeline for turning structured clinical findings into a
 readable, **evidence-grounded** report, with a hard line between the generic
 core and any single clinical domain.
 
-The idea is simple: the core knows how to retrieve, write, and fact-check. It
+The core idea: the core knows how to retrieve, write, and fact-check. It
 knows nothing about EEG, lab panels, or imaging. A small **adapter** supplies
 that knowledge. Add a domain by writing one class and dropping some text files
 in a folder. You never touch `core/`.
 
-> Decision-support tooling and a reference architecture. It is not a medical
-> device and must not be used to diagnose or treat anyone.
+> This is decision-support tooling, not a medical device. Do not use it to
+> diagnose or treat anyone.
 
 ## Why it is built this way
 
-Most "AI report" projects hardwire one domain into the prompt and call it a
-day. That does not survive contact with a second domain. Here the contract is
+Most report generation projects hardwire one domain into the prompt and call it
+a day. That does not survive contact with a second domain. Here the contract is
 explicit (`BaseAdapter`), generation is grounded in retrieved passages, and a
 verification pass flags any sentence the evidence does not support, so a
 confident-sounding hallucination shows up as a warning instead of slipping into
@@ -33,9 +33,9 @@ flowchart LR
     A -->|ClinicalFindings| P[Pipeline]
     KB[(Knowledge base)] --> R[Retriever]
     P --> R
-    R -->|RetrievedChunk[]| G[Generator]
-    G -->|GeneratedSection[]| V[Verifier]
-    V -->|warnings + confidence| OUT[GeneratedReport]
+    R -->|chunks| G[Generator]
+    G -->|sections| V[Verifier]
+    V -->|report| OUT[GeneratedReport]
 
     subgraph Core [core/ — domain-agnostic]
         P
