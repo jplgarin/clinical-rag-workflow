@@ -16,6 +16,14 @@ in a folder. You never touch `core/`.
 > This is decision-support tooling, not a medical device. Do not use it to
 > diagnose or treat anyone.
 
+## Background
+
+Built while developing Neuraxis, an EEG-based ADHD diagnostic support tool. The
+report generation kept wanting to know about EEG bands and normative scores,
+detail that had no business living in the pipeline itself. The adapter pattern
+solved that cleanly, and the generic core turned out to be useful enough to pull
+out as its own project.
+
 ## Why it is built this way
 
 Most report generation projects hardwire one domain into the prompt and call it
