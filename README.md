@@ -18,11 +18,12 @@ in a folder. You never touch `core/`.
 
 ## Background
 
-Built while developing Neuraxis, an EEG-based ADHD diagnostic support tool. The
-report generation kept wanting to know about EEG bands and normative scores,
-detail that had no business living in the pipeline itself. The adapter pattern
-solved that cleanly, and the generic core turned out to be useful enough to pull
-out as its own project.
+Clinical report generation tools tend to be built around a single domain and
+resist extension. This project started from a different assumption: the
+retrieval, generation, and verification steps are the same regardless of whether
+the input is an EEG readout, a lab panel, or an imaging result. The
+domain-specific logic is small enough to live in one class. So that is where it
+lives.
 
 ## Why it is built this way
 
