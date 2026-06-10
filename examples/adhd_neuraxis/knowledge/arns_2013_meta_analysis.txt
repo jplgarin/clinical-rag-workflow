@@ -1,0 +1,7 @@
+Declining Effect Sizes of the Theta/Beta Ratio Over Time
+
+Arns, Conners, and Kraemer (2013) revisited the theta/beta ratio (TBR) literature with a meta-analysis that examined how the reported group difference between ADHD and control samples changed across publication years. They found that the effect size associated with TBR had decreased markedly over time: earlier studies reported large separations between groups, while more recent studies reported considerably smaller ones.
+
+The authors attributed much of this decline to secular changes in the control and patient populations and to heterogeneity in recording and analysis methods rather than to a single technical artifact. Their central conclusion was that an elevated TBR is present in a subgroup of patients rather than uniformly across all individuals with ADHD, and that TBR therefore cannot serve as a reliable diagnostic marker on its own.
+
+This work is frequently cited as a caution against interpreting a single EEG ratio as diagnostic. It supports a framing in which TBR and related measures contribute prognostic or stratifying information within a broader clinical assessment, and in which heterogeneity across individuals is expected rather than anomalous.

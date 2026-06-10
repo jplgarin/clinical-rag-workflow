@@ -1,0 +1,7 @@
+Resting EEG Profiles and Subtypes in ADHD
+
+A body of work led by Clarke, Barry, and colleagues characterized resting-state EEG in children with ADHD using eyes-closed and eyes-open recordings. A recurring observation was increased absolute and relative theta power, often most pronounced over frontal and frontal-central regions, accompanied in many children by reduced relative beta or alpha power.
+
+This research also argued against treating ADHD as electrophysiologically uniform. The authors described distinct EEG profiles within ADHD samples, including a maturational-lag pattern of excess slow-wave activity and a separate pattern characterized by excess beta activity in a smaller subgroup. The existence of such subtypes is one reason a single summary ratio can obscure clinically relevant variation between individuals.
+
+For interpretation, elevated frontal theta in an individual child is consistent with the most commonly reported ADHD-associated pattern, but it is neither necessary nor sufficient for the condition. Topography matters: frontal-midline measures such as those at Fz and Cz tend to carry more of the reported group difference than posterior sites.

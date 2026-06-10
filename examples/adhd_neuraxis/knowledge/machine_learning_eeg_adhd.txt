@@ -1,0 +1,7 @@
+Machine Learning on EEG Features for ADHD Classification
+
+A growing literature applies machine learning to spectral and connectivity features derived from EEG in order to classify ADHD versus control samples. Reported cross-validated accuracies vary widely across studies, reflecting differences in sample size, feature sets, recording conditions, and validation rigor. Studies with small samples and without held-out or external validation tend to report optimistic accuracies that do not generalize.
+
+Feature-attribution methods such as SHAP (Shapley additive explanations) are increasingly used to make these models interpretable. SHAP assigns each input feature a signed contribution to a given prediction, so that a positive value indicates the feature pushed the model toward the positive class for that individual and a negative value pushed it away. This per-case attribution helps a clinician see which EEG features drove a particular probability rather than relying on the probability alone.
+
+Two cautions recur in this literature. First, feature importance is model- and sample-specific and does not establish a causal or diagnostic relationship. Second, a classifier probability is a continuous score whose operating threshold should be chosen for the clinical context; the same probability can warrant different actions depending on base rates and the cost of false positives and false negatives. Model outputs are best treated as decision support that is interpreted alongside standardized clinical assessment.

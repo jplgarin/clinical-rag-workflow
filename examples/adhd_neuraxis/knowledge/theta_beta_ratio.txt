@@ -1,0 +1,7 @@
+Theta/Beta Ratio as an EEG Correlate of ADHD
+
+The theta/beta ratio (TBR) is the ratio of power in the theta band (roughly 4 to 7 Hz) to power in the beta band (roughly 13 to 30 Hz), most often measured at central or frontal-central midline electrodes such as Cz and Fz. Across a number of studies, groups of children diagnosed with attention-deficit/hyperactivity disorder showed, on average, a higher TBR than typically developing peers, a pattern interpreted as relative cortical underarousal.
+
+Snyder and Hall (2006) conducted a meta-analysis of studies comparing TBR between ADHD and control groups and reported a large pooled effect size, which drove substantial interest in TBR as a candidate physiological marker. On the strength of this literature, the United States Food and Drug Administration in 2013 granted marketing authorization to a TBR-based system (NEBA) as an aid, used alongside clinical evaluation, in the assessment of ADHD.
+
+Importantly, the measure describes a group-level difference. There is wide overlap between the ADHD and control distributions, so an individual child with an elevated TBR is not thereby diagnosed, and many children with ADHD have a TBR in the typical range. TBR is best read as one piece of converging evidence rather than a standalone test.

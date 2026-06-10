@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clinical RAG Workflow</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">◐</span>
+      <span>Clinical RAG Workflow</span>
+    </div>
+    <a class="docs-link" href="/docs" target="_blank" rel="noopener">API docs</a>
+  </header>
+
+  <main class="layout">
+    <section class="panel input-panel">
+      <div class="panel-head">
+        <h2>Input</h2>
+        <span id="status-dot" class="dot" title="checking..."></span>
+      </div>
+
+      <label class="field">
+        <span>Domain</span>
+        <select id="domain"></select>
+      </label>
+
+      <label class="field">
+        <span>Patient context (JSON)</span>
+        <textarea id="patient" spellcheck="false" rows="4">{
+  "age": 12,
+  "sex": "M"
+}</textarea>
+      </label>
+
+      <label class="field grow">
+        <span>Findings (JSON)</span>
+        <textarea id="findings" spellcheck="false" class="code"></textarea>
+      </label>
+
+      <div class="actions">
+        <button id="sample" class="ghost">Load sample</button>
+        <button id="generate" class="primary">Generate report</button>
+      </div>
+      <p id="error" class="error" hidden></p>
+    </section>
+
+    <section class="panel output-panel">
+      <div class="panel-head">
+        <h2>Report</h2>
+        <div class="report-actions" hidden>
+          <button id="copy" class="ghost small">Copy</button>
+          <button id="download" class="ghost small">Download</button>
+        </div>
+      </div>
+      <div id="report" class="report">
+        <div class="empty">Run a generation to see the report here.</div>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

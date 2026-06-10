@@ -1,0 +1,27 @@
+{
+  "domain": "generic_labs",
+  "patient": {"age": 45, "sex": "F"},
+  "findings": [
+    {
+      "name": "Fasting glucose",
+      "value": 112,
+      "unit": "mg/dL",
+      "reference_range": "70 - 99",
+      "status": "borderline"
+    },
+    {
+      "name": "HbA1c",
+      "value": 6.1,
+      "unit": "%",
+      "reference_range": "4.0 - 5.6",
+      "status": "abnormal"
+    },
+    {
+      "name": "LDL cholesterol",
+      "value": 98,
+      "unit": "mg/dL",
+      "reference_range": "0 - 99",
+      "status": "normal"
+    }
+  ]
+}

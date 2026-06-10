@@ -1,0 +1,70 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "clinical-rag-workflow"
+version = "0.1.0"
+description = "Domain-agnostic clinical report generation with retrieval-augmented generation."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Joan Garin" }]
+keywords = ["rag", "clinical", "nlp", "report-generation", "retrieval"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Topic :: Scientific/Engineering",
+]
+
+dependencies = [
+  "pydantic>=2.5",
+  "numpy>=1.24",
+  "httpx>=0.25",
+  "sentence-transformers>=2.2",
+  "fastapi>=0.110",
+  "uvicorn[standard]>=0.27",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=7.4",
+  "pytest-cov>=4.1",
+  "flake8>=6.1",
+  "mypy>=1.8",
+  "httpx>=0.25",
+]
+
+[project.urls]
+Homepage = "https://github.com/jplgarin/clinical-rag-workflow"
+Issues = "https://github.com/jplgarin/clinical-rag-workflow/issues"
+
+[tool.setuptools]
+packages = ["core", "adapters", "api"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q --cov=core --cov=adapters --cov=api --cov-report=term-missing"
+filterwarnings = ["ignore::DeprecationWarning"]
+
+[tool.coverage.run]
+branch = true
+omit = ["tests/*"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
+
+[tool.mypy]
+python_version = "3.10"
+warn_unused_ignores = true
+warn_redundant_casts = true
+ignore_missing_imports = true
+no_implicit_optional = true
+files = ["core", "adapters", "api"]
+
+[tool.flake8]
+# flake8 reads .flake8 / setup.cfg, not pyproject. Kept here for reference;
+# the canonical config lives in .flake8.
+max-line-length = 100

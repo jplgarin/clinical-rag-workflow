@@ -1,0 +1,18 @@
+{
+  "patient_age": 12,
+  "patient_sex": "M",
+  "adhd_probability": 0.73,
+  "top_shap_features": [
+    {"name": "F3_theta_rel", "value": 0.28, "shap_value": 0.15},
+    {"name": "Fz_theta_beta_ratio", "value": 3.2, "shap_value": 0.12},
+    {"name": "Cz_beta_rel", "value": 0.11, "shap_value": -0.08},
+    {"name": "P3_alpha_rel", "value": 0.19, "shap_value": 0.04}
+  ],
+  "normative_comparison": {
+    "feature": "TBR_Fz",
+    "patient_value": 3.2,
+    "norm_mean": 2.1,
+    "norm_std": 0.4,
+    "z_score": 2.75
+  }
+}

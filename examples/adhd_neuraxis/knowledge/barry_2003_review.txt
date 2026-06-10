@@ -1,0 +1,7 @@
+Quantitative EEG in ADHD: A Review of Established Findings
+
+Barry, Clarke, and Johnstone (2003) reviewed the quantitative EEG literature in ADHD and synthesized the most replicated findings. The dominant theme across studies was increased slow-wave activity, particularly theta, together with reduced fast-wave activity, yielding the elevated theta/beta ratio reported elsewhere. These differences were generally largest in children and tended to attenuate with age.
+
+The review emphasized methodological sources of variability: differences in reference montage, eyes-open versus eyes-closed recording, age range, comorbidity, and the specific frequency band definitions used. Because band boundaries and electrode placement are not standardized across laboratories, absolute values are not directly comparable between studies, and normative comparison must use norms collected under matched conditions.
+
+A practical implication for individual interpretation is that a patient value should be compared against an age-matched normative distribution recorded with a comparable protocol. A z-score expresses how far the patient sits from that reference. Larger absolute z-scores indicate stronger deviation, but the clinical meaning of any deviation depends on the feature, the child's age, and corroborating clinical information.
