@@ -17,7 +17,7 @@ from core import __version__
 from core.generator import ReportGenerator
 from core.pipeline import ClinicalReportPipeline
 from core.retriever import Retriever, VectorStore
-from core.verifier import ReportVerifier
+from core.verifier import ReportVerifier, embedder_from_model
 from api.models import (
     DomainInfo,
     GenerateRequest,
@@ -51,6 +51,7 @@ class Registry:
         """
         domain = adapter.get_domain()
         retriever = Retriever()
+        embedder = None
         if embed:
             store = VectorStore(name=domain)
             kb_path = adapter.get_knowledge_base_path()
@@ -58,13 +59,16 @@ class Registry:
                 store.load_documents(kb_path)
                 store.embed_documents()
                 retriever.add_store(store)
+                # Reuse the store's loaded model so the verifier judges
+                # grounding by semantic similarity, not strict token overlap.
+                embedder = embedder_from_model(store.model)
             else:
                 logger.warning("knowledge path missing for %s: %s", domain, kb_path)
 
         pipeline = ClinicalReportPipeline(
             retriever=retriever,
             generator=generator or ReportGenerator(),
-            verifier=ReportVerifier(),
+            verifier=ReportVerifier(embedder=embedder),
             adapter=adapter,
         )
         self._pipelines[domain] = pipeline

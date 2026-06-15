@@ -82,3 +82,52 @@ def test_semantic_fallback_supports_paraphrase():
 def test_cosine_edge_cases():
     assert _cosine([0, 0], [1, 1]) == 0.0
     assert _cosine([1, 0], [1, 0]) == 1.0
+
+
+def _pair_embedder(claim_vec, chunk_vec):
+    """Embedder returning a fixed vector for the claim and for the chunk."""
+
+    def embed(texts):
+        return [claim_vec if i == 0 else chunk_vec for i, _ in enumerate(texts)]
+
+    return embed
+
+
+def test_numeric_assertion_absent_from_kb_is_flagged():
+    # Strong lexical overlap, but the specific number appears in no chunk.
+    section = GeneratedSection(
+        title="S", content="Theta beta ratio measured 9.9 in this recording."
+    )
+    src = [chunk("Theta beta ratio reflects cortical arousal patterns.")]
+    results = ReportVerifier().verify_section(section, src)
+    assert results[0].is_supported is False
+
+
+def test_grounded_number_is_not_flagged():
+    section = GeneratedSection(
+        title="S", content="Theta beta ratio measured 9.9 in this recording."
+    )
+    src = [chunk("A theta beta ratio of 9.9 indicates elevated cortical arousal.")]
+    results = ReportVerifier().verify_section(section, src)
+    assert results[0].is_supported is True
+
+
+def test_borderline_similarity_is_not_flagged():
+    # Cosine ~0.3 sits in the 0.25-0.35 grey zone: grounded enough not to flag.
+    section = GeneratedSection(
+        title="S", content="Paraphrased wording with no shared content words zzz."
+    )
+    src = [chunk("Entirely distinct vocabulary in the evidence passage qqq.")]
+    verifier = ReportVerifier(embedder=_pair_embedder([1.0, 0.0], [0.3, 0.9539392]))
+    results = verifier.verify_section(section, src)
+    assert results[0].is_supported is True
+
+
+def test_low_similarity_is_flagged():
+    section = GeneratedSection(
+        title="S", content="Paraphrased wording with no shared content words zzz."
+    )
+    src = [chunk("Entirely distinct vocabulary in the evidence passage qqq.")]
+    verifier = ReportVerifier(embedder=_pair_embedder([1.0, 0.0], [0.1, 0.9949874]))
+    results = verifier.verify_section(section, src)
+    assert results[0].is_supported is False
