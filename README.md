@@ -64,9 +64,8 @@ the full walk-through.
   nothing else.
 - **Local retrieval.** sentence-transformers embeddings and brute-force cosine
   search. No vector database, no external embedding API.
-- **Provider-agnostic generation.** Speaks the OpenAI-compatible chat protocol,
-  so it runs against a hosted endpoint or a local server (vLLM, Ollama, ...) by
-  changing one env var.
+- **Claude-backed generation.** Uses the official Anthropic SDK to talk to
+  Claude directly; the model is configurable via one env var.
 - **Hallucination guard.** Claims are checked against the retrieved evidence;
   unsupported ones become report warnings and pull down confidence.
 - **HTTP API + web UI.** FastAPI service with a dependency-free dark-mode
@@ -80,7 +79,7 @@ the full walk-through.
 git clone https://github.com/jplgarin/clinical-rag-workflow.git
 cd clinical-rag-workflow
 pip install -r requirements.txt && pip install -e ".[dev]"
-cp .env.example .env            # then set LLM_API_BASE / LLM_API_KEY
+cp .env.example .env            # then set ANTHROPIC_API_KEY
 uvicorn api.main:app --reload   # UI at http://localhost:8000/app
 ```
 

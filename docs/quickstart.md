@@ -3,8 +3,7 @@
 ## Requirements
 
 - Python 3.10, 3.11, or 3.12
-- An OpenAI-compatible LLM endpoint (hosted, or a local server such as Ollama,
-  vLLM, or LM Studio)
+- An Anthropic API key (`ANTHROPIC_API_KEY`) for report generation
 
 The first run downloads the `all-MiniLM-L6-v2` embedding model (~90 MB). After
 that, retrieval is fully offline.
@@ -27,9 +26,8 @@ cp .env.example .env
 Set at least:
 
 ```bash
-LLM_API_BASE=https://api.openai.com/v1   # or http://localhost:11434/v1 for Ollama
-LLM_API_KEY=...                          # blank is fine for local servers
-GENERATOR_MODEL=gpt-4o-mini              # whatever your backend serves
+ANTHROPIC_API_KEY=...                    # your Anthropic API key
+GENERATOR_MODEL=claude-sonnet-4-6        # Claude model id
 ```
 
 ## Run the service

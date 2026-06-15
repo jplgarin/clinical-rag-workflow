@@ -1,6 +1,6 @@
+from types import SimpleNamespace
 from unittest.mock import MagicMock
 
-import httpx
 import pytest
 
 from core.generator import LLMClient, ReportGenerator, _safe_format
@@ -98,28 +98,23 @@ def test_generate_report_falls_back_to_default_template(findings):
     assert len(report.sections) == 1
 
 
-def test_llm_client_posts_openai_shape(monkeypatch):
+def test_llm_client_calls_anthropic_messages():
     captured = {}
 
-    class FakeResponse:
-        def raise_for_status(self):
-            pass
+    def fake_create(**kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(
+            content=[SimpleNamespace(type="text", text="  hello  ")]
+        )
 
-        def json(self):
-            return {"choices": [{"message": {"content": "  hello  "}}]}
+    client = LLMClient(model="m", api_key="secret")
+    client.client.messages.create = fake_create
 
-    def fake_post(url, json, headers, timeout):
-        captured["url"] = url
-        captured["json"] = json
-        captured["headers"] = headers
-        return FakeResponse()
-
-    monkeypatch.setattr(httpx, "post", fake_post)
-    client = LLMClient(model="m", api_key="secret", base_url="https://x/v1")
     out = client.complete("sys", "user", max_tokens=10, temperature=0.2)
 
     assert out == "hello"
-    assert captured["url"] == "https://x/v1/chat/completions"
-    assert captured["headers"]["Authorization"] == "Bearer secret"
-    assert captured["json"]["messages"][0]["role"] == "system"
-    assert captured["json"]["max_tokens"] == 10
+    assert captured["model"] == "m"
+    assert captured["system"] == "sys"
+    assert captured["max_tokens"] == 10
+    assert captured["temperature"] == 0.2
+    assert captured["messages"] == [{"role": "user", "content": "user"}]

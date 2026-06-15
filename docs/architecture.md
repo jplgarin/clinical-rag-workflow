@@ -16,7 +16,7 @@ rule, adding a domain stays a matter of writing one class plus a folder of text.
 | `core/schema.py` | Pydantic models that every layer speaks. The lingua franca. |
 | `adapters/base.py` | The `BaseAdapter` contract: the only seam between core and a domain. |
 | `core/retriever.py` | Embedding, indexing, and cosine search over text knowledge bases. |
-| `core/generator.py` | Prompt assembly and the call to an OpenAI-compatible LLM. |
+| `core/generator.py` | Prompt assembly and the call to Claude via the Anthropic SDK. |
 | `core/verifier.py` | Claim-level grounding check against the retrieved evidence. |
 | `core/pipeline.py` | Orchestration. Wires the four stages and logs each hand-off. |
 | `api/` | FastAPI service and the adapter registry. |
@@ -63,10 +63,11 @@ vector database and removes an external service from the deployment. If a corpus
 grows past what fits comfortably in memory, swapping in an ANN index is a
 contained change inside `VectorStore`.
 
-**Generation is provider-agnostic.** The generator speaks the OpenAI
-chat-completions wire format because nearly every hosted and self-hosted server
-exposes it. Point `LLM_API_BASE` wherever you like. The `LLMClient` is injectable
-so tests pass a fake and never hit the network.
+**Generation uses Claude via the Anthropic SDK.** The generator calls the
+Messages API directly, which avoids the request-shape and escaping mismatches of
+an OpenAI-compatible shim. Auth and model come from `ANTHROPIC_API_KEY` and
+`GENERATOR_MODEL`. The `LLMClient` is injectable so tests pass a fake and never
+hit the network.
 
 **Verification is intentionally simple.** Lexical overlap with an optional
 semantic fallback will not catch every subtle misstatement, but it reliably

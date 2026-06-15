@@ -1,9 +1,10 @@
-"""Report generation backed by an OpenAI-compatible chat completions API.
+"""Report generation backed by Anthropic's Messages API.
 
-The client talks the OpenAI chat-completions wire format, which most hosted
-and self-hosted inference servers (vLLM, Ollama, LM Studio, TGI, and the
-commercial providers) expose. That keeps the core free of any single vendor:
-point ``LLM_API_BASE`` wherever you like.
+The client uses the official ``anthropic`` SDK and talks to Claude directly,
+which avoids the escaping and request-shape mismatches of the
+OpenAI-compatible shim. Credentials and model are resolved from the
+environment: ``ANTHROPIC_API_KEY`` for auth and ``GENERATOR_MODEL`` for the
+model id.
 """
 
 from __future__ import annotations
@@ -12,7 +13,7 @@ import logging
 import os
 from typing import Any, Optional
 
-import httpx
+import anthropic
 
 from core.schema import (
     ClinicalFindings,
@@ -36,20 +37,18 @@ _SYSTEM_PROMPT = (
 
 
 class LLMClient:
-    """Minimal synchronous client for an OpenAI-compatible endpoint."""
+    """Minimal synchronous client for Anthropic's Messages API."""
 
     def __init__(
         self,
         model: str,
         api_key: Optional[str] = None,
-        base_url: Optional[str] = None,
         timeout: float = 60.0,
     ):
         self.model = model
-        self.api_key = api_key or os.getenv("LLM_API_KEY", "")
-        resolved_base = base_url or os.getenv("LLM_API_BASE") or "https://api.openai.com/v1"
-        self.base_url = resolved_base.rstrip("/")
-        self.timeout = timeout
+        # Falls back to the SDK's own ANTHROPIC_API_KEY env resolution when
+        # api_key is None.
+        self.client = anthropic.Anthropic(api_key=api_key, timeout=timeout)
 
     def complete(
         self,
@@ -58,27 +57,16 @@ class LLMClient:
         max_tokens: int,
         temperature: float,
     ) -> str:
-        headers = {"Content-Type": "application/json"}
-        if self.api_key:
-            headers["Authorization"] = f"Bearer {self.api_key}"
-        body = {
-            "model": self.model,
-            "messages": [
-                {"role": "system", "content": system},
-                {"role": "user", "content": user},
-            ],
-            "max_tokens": max_tokens,
-            "temperature": temperature,
-        }
-        resp = httpx.post(
-            f"{self.base_url}/chat/completions",
-            json=body,
-            headers=headers,
-            timeout=self.timeout,
+        message = self.client.messages.create(
+            model=self.model,
+            max_tokens=max_tokens,
+            temperature=temperature,
+            system=system,
+            messages=[{"role": "user", "content": user}],
         )
-        resp.raise_for_status()
-        data = resp.json()
-        return data["choices"][0]["message"]["content"].strip()
+        return "".join(
+            block.text for block in message.content if block.type == "text"
+        ).strip()
 
 
 class ReportGenerator:
@@ -91,7 +79,7 @@ class ReportGenerator:
         temperature: Optional[float] = None,
         client: Optional[LLMClient] = None,
     ):
-        self.model = model or os.getenv("GENERATOR_MODEL") or "gpt-4o-mini"
+        self.model = model or os.getenv("GENERATOR_MODEL") or "claude-sonnet-4-6"
         self.max_tokens = max_tokens or int(os.getenv("MAX_TOKENS", "2000"))
         self.temperature = (
             temperature
