@@ -57,8 +57,11 @@ class LabPanelAdapter(BaseAdapter):
         )
 ```
 
-`status` accepts `normal`, `borderline`, `abnormal`, or `critical`. Anything you
-want to keep but the schema does not model goes in a finding's `metadata` dict.
+`status` is a closed enum: it accepts only `normal`, `borderline`, `abnormal`, or
+`critical`. Any other value (for example a domain's raw `"high"` or `"low"`) fails
+validation, so your adapter must map its domain's raw status strings onto these
+four values rather than passing them through unchanged. Anything you want to keep
+but the schema does not model goes in a finding's `metadata` dict.
 
 ## Step 2: name the sections and write prompts
 

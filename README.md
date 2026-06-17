@@ -115,6 +115,7 @@ class LabPanelAdapter(BaseAdapter):
                 unit=item.get("unit"),
                 reference_range=item.get("reference_range"),
                 status=item.get("status", "normal"),
+                # status: "normal" | "borderline" | "abnormal" | "critical"
             )
             for item in raw["findings"]
         ]
