@@ -62,8 +62,9 @@ the full walk-through.
 
 - **Domain-agnostic core.** One `BaseAdapter` interface; the pipeline depends on
   nothing else.
-- **Local retrieval.** sentence-transformers embeddings and brute-force cosine
-  search. No vector database, no external embedding API.
+- **Local retrieval.** sentence-transformers embeddings (downloaded once on first
+  run, then fully local) and brute-force cosine search. No vector database, no
+  per-request embedding API.
 - **Claude-backed generation.** Uses the official Anthropic SDK to talk to
   Claude directly; the model is configurable via one env var.
 - **Hallucination guard.** Claims are checked against the retrieved evidence;

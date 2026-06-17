@@ -61,7 +61,9 @@ Concretely, `ClinicalReportPipeline.run` does this:
 domain, a numpy matrix plus brute-force cosine is faster to reason about than a
 vector database and removes an external service from the deployment. If a corpus
 grows past what fits comfortably in memory, swapping in an ANN index is a
-contained change inside `VectorStore`.
+contained change inside `VectorStore`. The embedding model itself is fetched from
+Hugging Face on first run (needs network access once), then cached and used
+offline thereafter.
 
 **Generation uses Claude via the Anthropic SDK.** The generator calls the
 Messages API directly, which avoids the request-shape and escaping mismatches of
