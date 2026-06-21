@@ -46,7 +46,7 @@ flowchart LR
     G -->|sections| V[Verifier]
     V -->|report| OUT[GeneratedReport]
 
-    subgraph Core [core/ — domain-agnostic]
+    subgraph Core [core/: domain-agnostic]
         P
         R
         G
