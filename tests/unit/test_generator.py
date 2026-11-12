@@ -3,13 +3,14 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from core.generator import LLMClient, ReportGenerator, _safe_format
+from core.generator import LLMClient, ReportGenerator, _format_patient, _safe_format
 from core.schema import (
     ClinicalFinding,
     ClinicalFindings,
     PatientContext,
     ReportContext,
     RetrievedChunk,
+    Sex,
 )
 
 
@@ -118,3 +119,24 @@ def test_llm_client_calls_anthropic_messages():
     assert captured["max_tokens"] == 10
     assert captured["temperature"] == 0.2
     assert captured["messages"] == [{"role": "user", "content": "user"}]
+
+
+@pytest.mark.parametrize(
+    ("sex", "word"),
+    [
+        (Sex.MALE, "male"),
+        (Sex.FEMALE, "female"),
+        (Sex.OTHER, "other"),
+        (Sex.UNKNOWN, "unknown"),
+        ("F", "female"),
+        ("U", "unknown"),
+    ],
+)
+def test_patient_sex_reaches_the_prompt_as_a_word(sex, word):
+    patient = PatientContext(age=9, sex=sex)
+
+    assert _format_patient(patient) == f"age 9, sex {word}, group child"
+
+
+def test_patient_sex_defaults_to_the_word_unknown():
+    assert "sex unknown" in _format_patient(PatientContext())

@@ -22,6 +22,7 @@ from core.schema import (
     PatientContext,
     ReportContext,
     RetrievedChunk,
+    Sex,
 )
 
 logger = logging.getLogger(__name__)
@@ -205,11 +206,26 @@ def _format_findings(findings: ClinicalFindings) -> str:
     return "\n".join(lines) if lines else "(no findings provided)"
 
 
+# PatientContext stores the enum value (``use_enum_values``), so without this the
+# prompt reads "sex F" or "sex U" and the model is left to guess what U means.
+_SEX_WORDS: dict[str, str] = {
+    Sex.MALE.value: "male",
+    Sex.FEMALE.value: "female",
+    Sex.OTHER.value: "other",
+    Sex.UNKNOWN.value: "unknown",
+}
+
+
+def _sex_word(sex: Sex | str) -> str:
+    code = sex.value if isinstance(sex, Sex) else sex
+    return _SEX_WORDS[code]
+
+
 def _format_patient(patient: PatientContext) -> str:
     parts = []
     if patient.age is not None:
         parts.append(f"age {patient.age}")
-    parts.append(f"sex {patient.sex}")
+    parts.append(f"sex {_sex_word(patient.sex)}")
     if patient.age_group:
         parts.append(f"group {patient.age_group}")
     return ", ".join(parts)
