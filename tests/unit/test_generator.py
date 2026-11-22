@@ -3,10 +3,11 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from core.generator import LLMClient, ReportGenerator, _safe_format
+from core.generator import LLMClient, ReportGenerator, _format_findings, _safe_format
 from core.schema import (
     ClinicalFinding,
     ClinicalFindings,
+    FindingStatus,
     PatientContext,
     ReportContext,
     RetrievedChunk,
@@ -118,3 +119,30 @@ def test_llm_client_calls_anthropic_messages():
     assert captured["max_tokens"] == 10
     assert captured["temperature"] == 0.2
     assert captured["messages"] == [{"role": "user", "content": "user"}]
+
+
+def test_format_findings_writes_the_label_in_place_of_the_status():
+    bundle = ClinicalFindings(
+        domain="demo",
+        findings=[
+            ClinicalFinding(
+                name="C3_alpha_rel",
+                value=0.2,
+                reference_range="0.02 - 0.18",
+                status=FindingStatus.UNGRADED,
+                label="ABOVE 2 SD",
+            ),
+            ClinicalFinding(name="TBR_Fz", value=3.2, status="abnormal"),
+        ],
+    )
+    lines = _format_findings(bundle).splitlines()
+    assert lines[0] == "- C3_alpha_rel: 0.2 (ref 0.02 - 0.18) [ABOVE 2 SD]"
+    assert lines[1] == "- TBR_Fz: 3.2 [abnormal]"
+
+
+def test_format_findings_writes_ungraded_without_a_label():
+    bundle = ClinicalFindings(
+        domain="demo",
+        findings=[ClinicalFinding(name="x", value=1.0, status=FindingStatus.UNGRADED)],
+    )
+    assert _format_findings(bundle) == "- x: 1.0 [ungraded]"

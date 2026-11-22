@@ -25,6 +25,10 @@ class FindingStatus(str, Enum):
     BORDERLINE = "borderline"
     ABNORMAL = "abnormal"
     CRITICAL = "critical"
+    # A measurement placed against a reference that cannot grade it, for
+    # example a cohort that is not a healthy population: it has a position,
+    # not a verdict. Carry the position in ``ClinicalFinding.label``.
+    UNGRADED = "ungraded"
 
 
 class Sex(str, Enum):
@@ -44,6 +48,9 @@ class ClinicalFinding(BaseModel):
         unit: Unit of measure, or ``None`` when the value is dimensionless.
         reference_range: Human-readable normal range, e.g. ``"1.8 - 2.4"``.
         status: Clinical interpretation of the value.
+        label: Optional text shown in place of ``status`` where a finding is
+            written out for the generator, e.g. ``"ABOVE 2 SD"`` for an
+            ``UNGRADED`` finding. ``None`` writes the status.
         confidence: Model or instrument confidence in ``[0, 1]``.
         metadata: Free-form extras an adapter wants to carry through (SHAP
             values, channel names, z-scores, and so on).
@@ -56,6 +63,7 @@ class ClinicalFinding(BaseModel):
     unit: Optional[str] = None
     reference_range: Optional[str] = None
     status: FindingStatus = FindingStatus.NORMAL
+    label: Optional[str] = None
     confidence: float = Field(default=1.0, ge=0.0, le=1.0)
     metadata: dict[str, Any] = Field(default_factory=dict)
 
@@ -77,8 +85,15 @@ class ClinicalFindings(BaseModel):
 
     @property
     def abnormal(self) -> list[ClinicalFinding]:
-        """Findings that are anything other than ``normal``."""
-        return [f for f in self.findings if f.status != FindingStatus.NORMAL.value]
+        """Findings graded anything other than ``normal``.
+
+        ``ungraded`` findings carry no verdict, so they are not abnormal.
+        """
+        return [
+            f
+            for f in self.findings
+            if f.status not in (FindingStatus.NORMAL.value, FindingStatus.UNGRADED.value)
+        ]
 
     def by_status(self, status: FindingStatus) -> list[ClinicalFinding]:
         return [f for f in self.findings if f.status == status.value]
