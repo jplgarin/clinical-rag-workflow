@@ -201,7 +201,8 @@ def _format_findings(findings: ClinicalFindings) -> str:
     for f in findings.findings:
         unit = f" {f.unit}" if f.unit else ""
         ref = f" (ref {f.reference_range})" if f.reference_range else ""
-        lines.append(f"- {f.name}: {f.value}{unit}{ref} [{f.status}]")
+        tag = f.label if f.label else f.status
+        lines.append(f"- {f.name}: {f.value}{unit}{ref} [{tag}]")
     return "\n".join(lines) if lines else "(no findings provided)"
 
 

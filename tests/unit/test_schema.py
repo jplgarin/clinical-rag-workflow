@@ -53,6 +53,7 @@ def test_findings_abnormal_and_by_status():
             ClinicalFinding(name="a", value=1, status=FindingStatus.NORMAL),
             ClinicalFinding(name="b", value=2, status=FindingStatus.ABNORMAL),
             ClinicalFinding(name="c", value=3, status=FindingStatus.CRITICAL),
+            ClinicalFinding(name="d", value=4, status=FindingStatus.UNGRADED),
         ],
     )
     assert len(findings.abnormal) == 2
