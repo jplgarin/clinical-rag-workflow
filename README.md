@@ -172,6 +172,26 @@ pytest
 Keep the core domain-agnostic. If a change needs to know about a specific
 clinical domain, it belongs in an adapter, not in `core/`.
 
+### Known failing check: `mypy` on `core/generator.py:60`
+
+CI's type check fails on `main`, and it is not stub noise to ignore. It is a real
+break. `LLMClient.complete` calls `messages.create(..., temperature=...)`, and the
+current `anthropic` SDK's `Messages.create` has no `temperature` parameter and no
+`**kwargs`. mypy reports this as a `call-overload` error. At run time the same
+call raises `TypeError: Messages.create() got an unexpected keyword argument
+'temperature'`, so every generated report fails.
+
+- **Where it is tracked:** Synapcore registers it as the third precondition on
+  deploying its report worker (`audit/analysis_report_queue_split_2026-11-04.md`,
+  "Third precondition"). Its lock pins `anthropic==1.4.0`, which has the same
+  signature.
+- **Why it stays red:** the dependency is `anthropic>=0.40` and unpinned. The fix
+  is a deliberate change to the call or to the pin, and it is not made yet.
+  Silencing the error (a `type: ignore`, or letting the step pass) would hide
+  the one signal that shows the break.
+- **When it goes green:** when that fix lands. Any other mypy error on this
+  check is new and needs reading.
+
 ## License
 
 MIT. See [LICENSE](LICENSE).
